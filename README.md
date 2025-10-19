@@ -1,5 +1,7 @@
 # Next.js Payments Integration Demo
 
+**Live Demo:** [https://multipay-demo.vercel.app](https://multipay-demo.vercel.app)
+
 This is a sample project demonstrating how to integrate multiple payment gateways into a Next.js application. It includes examples for handling payments with both PayPal and IntaSend.
 
 ## Features
