@@ -88,11 +88,13 @@ export default function StkPushForm() {
       </form>
       {error && <p className="mt-4 text-red-600 bg-red-100 p-3 rounded-lg text-center">{error}</p>}
       {paymentData && (
-        <div className="mt-4 bg-gray-100 p-4 rounded-lg">
-          <h3 className="font-bold text-gray-700 mb-2">Payment Status:</h3>
-          <pre className="text-sm text-gray-800 whitespace-pre-wrap break-all">
-            {JSON.stringify(paymentData, null, 2)}
-          </pre>
+        <div className="mt-4 bg-green-100 p-4 rounded-lg text-center">
+          <p className="font-semibold text-green-800">
+            STK Push initiated successfully!
+          </p>
+          <p className="text-green-700">
+            Please check your phone to complete the payment.
+          </p>
         </div>
       )}
     </div>
