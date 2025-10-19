@@ -7,8 +7,8 @@ import { usePaymentStore } from "@/stores/intasend/paymentStore";
 export default function CheckoutForm() {
   const [amount, setAmount] = useState("");
 
-  const { generateCheckoutLink, loading, error, checkoutUrl } =
-    usePaymentStore();
+  const { checkoutState, generateCheckoutLink } = usePaymentStore();
+  const { loading, error, checkoutUrl } = checkoutState;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

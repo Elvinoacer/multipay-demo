@@ -28,8 +28,7 @@ export async function POST(req: NextRequest) {
     const intasend = new IntaSend(
       process.env.INTASEND_PUBLISHABLE_KEY,
       process.env.INTASEND_SECRET_KEY,
-      // process.env.NODE_ENV !== "production" // Test mode in non-prod
-      false
+      process.env.NODE_ENV !== "production" // Test mode in non-prod
     );
 
     // The host and redirect_url should preferably be set in your environment variables

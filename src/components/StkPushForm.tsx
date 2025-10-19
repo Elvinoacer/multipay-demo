@@ -14,7 +14,8 @@ export default function StkPushForm() {
     api_ref: "test",
   });
 
-  const { initiateStkPush, loading, error, paymentData } = usePaymentStore();
+  const { stkState, initiateStkPush } = usePaymentStore();
+  const { loading, error, paymentData } = stkState;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

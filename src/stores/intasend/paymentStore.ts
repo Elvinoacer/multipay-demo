@@ -1,55 +1,73 @@
-// src/stores/intasend/paymentStore.ts (Zustand store)
 import { create } from "zustand";
 
-interface PaymentState {
+type ActionState = {
   loading: boolean;
   error: string | null;
-  paymentData: any | null;
-  checkoutUrl: string | null;
+};
+
+interface PaymentState {
+  stkState: ActionState & { paymentData: any | null };
+  checkoutState: ActionState & { checkoutUrl: string | null };
   initiateStkPush: (data: any) => Promise<void>;
   generateCheckoutLink: (data: any) => Promise<void>;
   reset: () => void;
 }
 
 export const usePaymentStore = create<PaymentState>((set) => ({
-  loading: false,
-  error: null,
-  paymentData: null,
-  checkoutUrl: null,
+  stkState: {
+    loading: false,
+    error: null,
+    paymentData: null,
+  },
+  checkoutState: {
+    loading: false,
+    error: null,
+    checkoutUrl: null,
+  },
+
   async initiateStkPush(data) {
-    set({ loading: true, error: null });
+    set((state) => ({ stkState: { ...state.stkState, loading: true, error: null } }));
     try {
       const response = await fetch("/api/intasend/stk-push", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("Failed to initiate STK Push");
       const result = await response.json();
-      set({ paymentData: result });
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to initiate STK Push");
+      }
+      set((state) => ({ stkState: { ...state.stkState, paymentData: result } }));
     } catch (err) {
-      set({ error: (err as Error).message });
+      set((state) => ({ stkState: { ...state.stkState, error: (err as Error).message } }));
     } finally {
-      set({ loading: false });
+      set((state) => ({ stkState: { ...state.stkState, loading: false } }));
     }
   },
+
   async generateCheckoutLink(data) {
-    set({ loading: true, error: null });
+    set((state) => ({ checkoutState: { ...state.checkoutState, loading: true, error: null } }));
     try {
       const response = await fetch("/api/intasend/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!response.ok) throw new Error("Failed to generate checkout link");
       const result = await response.json();
-      set({ checkoutUrl: result.url, paymentData: result });
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to generate checkout link");
+      }
+      set((state) => ({ checkoutState: { ...state.checkoutState, checkoutUrl: result.url } }));
     } catch (err) {
-      set({ error: (err as Error).message });
+      set((state) => ({ checkoutState: { ...state.checkoutState, error: (err as Error).message } }));
     } finally {
-      set({ loading: false });
+      set((state) => ({ checkoutState: { ...state.checkoutState, loading: false } }));
     }
   },
+
   reset: () =>
-    set({ loading: false, error: null, paymentData: null, checkoutUrl: null }),
+    set({
+      stkState: { loading: false, error: null, paymentData: null },
+      checkoutState: { loading: false, error: null, checkoutUrl: null },
+    }),
 }));
